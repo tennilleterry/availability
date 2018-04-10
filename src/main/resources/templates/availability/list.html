@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org/">
+<head th:replace="fragments :: head"></head>
+<body class="container">
+<h1 th:text="${title}">Default Title</h1>
+
+<p th:unless="${availabilities} and ${availabilities.size()}">No availability.</p>
+
+<table class="table">
+
+    <tr>
+        <th>Availability</th>
+        <th>Day</th>
+        <th>User</th>
+    </tr>
+
+    <tr th:each="availability : ${availabilities}">
+        <td th:text="${availability.name}"></td>
+        <td th:text="${availability.day"}></td>
+        <td th:text="${availability.user.name}"></td>
+    </tr>
+
+</table>
+
+</body>
+</html>
