@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.Errors;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 
@@ -28,14 +30,14 @@ public class AvailabilityController {
     private UserDao userDao;
 
 
-
-    @RequestMapping(value="list")
-    public String index(Model model){
+    @RequestMapping(value = "list")
+    public String index(Model model) {
         model.addAttribute("availabilities", availabilityDao.findAll());
-        model.addAttribute("title", "All Availability");
+        model.addAttribute("title", "Availability");
         return "availability/list";
 
     }
+
 
 
 
@@ -44,9 +46,14 @@ public class AvailabilityController {
         model.addAttribute("title", "Add Availability");
         model.addAttribute(new Availability());
         model.addAttribute("users", userDao.findAll());
+       // model.addAttribute("users", anotheruser.getName());
+
         return "availability/add";
 
     }
+
+
+
 
 
 
@@ -54,18 +61,32 @@ public class AvailabilityController {
     public String processAddAvailabilityForm(@ModelAttribute @Valid Availability newAvailability,
                                              Errors errors,
                                              @RequestParam int userId,
-                                             Model model){
+                                             Model model) {
 
-        if(errors.hasErrors()){
+        if (errors.hasErrors()) {
             model.addAttribute("title", "Add availability");
+            model.addAttribute("user", userDao.findAll());
             return "availability/add";
 
         }
+
+        //User user = userDao.findOne(userId);
+        //List<Availability> availabilities = user.getAvailabilities();
+        //model.addAttribute("availabilities", availabilities);
+       // model.addAttribute("title", user.getName());
+        //return "redirect:/availability/list";
+
 
         User user = userDao.findOne(userId);
         newAvailability.setUser(user);
         availabilityDao.save(newAvailability);
         return "redirect:/availability/list";
+
+        //Category cat = categoryDao.findOne(id);
+        //List<Cheese> cheeses = cat.getCheeses();
+        //model.addAttribute("cheeses", cheeses);
+        //model.addAttribute("title", "Cheeses in Category: " + cat.getName());
+        //return "cheese/index";
 
     }
 
@@ -73,6 +94,7 @@ public class AvailabilityController {
 
     @RequestMapping(value = "remove", method = RequestMethod.GET)
     public String displayRemoveAvailabilityForm(Model model){
+
         model.addAttribute("availabilities", availabilityDao.findAll());
         model.addAttribute("title", "Remove availability");
         return "availability/remove";
@@ -81,16 +103,17 @@ public class AvailabilityController {
 
 
 
- //   @RequestMapping(value = "remove", method = RequestMethod.POST)
- //   public String processRemoveAvailabilityForm(@RequestParam int[] availabilityIds){
-  //      for(int availabilityId : availabilityIds){
-   //         availabilityDao.delete(availabilityId);
 
- //       }
- //       return "redirect:/availability/list";
 
- //   }
+    @RequestMapping(value = "remove", method = RequestMethod.POST)
+    public String processRemoveAvailabilityForm(@RequestParam int[] availabilityIds){
+        for(int availabilityId : availabilityIds){
+            availabilityDao.delete(availabilityId);
 
+        }
+        return "redirect:/availability/list";
+
+    }
 
 
 }

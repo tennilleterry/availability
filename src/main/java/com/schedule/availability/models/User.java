@@ -26,7 +26,7 @@ public class User {
     private String password;
 
     @OneToMany
-    @JoinColumn(name = "availability_id")
+    @JoinColumn(name = "user_id")
     private List<Availability> availabilities = new ArrayList<>();
 
     public User(String name, String email, String password) {
@@ -70,4 +70,6 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public List<Availability> getAvailabilities() { return availabilities; }
 }

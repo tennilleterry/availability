@@ -21,7 +21,7 @@ public class UserController {
 
     @RequestMapping(value="add", method = RequestMethod.GET)
     public String displayAddUserForm(Model model){
-        model.addAttribute("title", "Register a User");
+        model.addAttribute("title", "Create New Employee Profile");
         model.addAttribute(new User());
         return "user/add";
     }
@@ -31,26 +31,26 @@ public class UserController {
                                      Errors errors, String verify) {
         String comparePassword = newUser.getPassword();
         if (userDao.existsByName(newUser.getName())) {
-            model.addAttribute("title", "Register a User");
+            model.addAttribute("title", "Create New Employee Profile");
             model.addAttribute(newUser);
-            model.addAttribute("userexistserror", "That username already exists. Please try another");
+            model.addAttribute("userExistsError", "That username already exists. Please try another");
             return "user/add";
         }
         if (errors.hasErrors()) {
-            model.addAttribute("title", "Register a User");
+            model.addAttribute("title", "Create New Employee Profile");
             model.addAttribute(newUser);
             return "user/add";
         }
         if (!comparePassword.equals(verify)) {
-            model.addAttribute("title", "Register a User");
-            model.addAttribute("verifyerror", "Password don't match.");
+            model.addAttribute("title", "Create New Employee Profile");
+            model.addAttribute("verifyError", "Password don't match.");
             model.addAttribute(newUser);
             newUser.setPassword("");
             return "user/add";
         }
         if (comparePassword.equals(verify) && !userDao.existsByName(newUser.getName())){
             userDao.save(newUser);
-            return "redirect:/availability/list";
+            return "redirect:/availability/add";
         }
         return "user/add";
     }

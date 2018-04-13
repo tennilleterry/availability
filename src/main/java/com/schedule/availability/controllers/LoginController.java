@@ -7,6 +7,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.validation.Errors;
+
+
 
 @Controller
 @RequestMapping(value = "user")
@@ -18,8 +21,8 @@ public class LoginController {
     @RequestMapping(value="login", method = RequestMethod.GET)
     public String displayUserLoginForm(Model model){
         model.addAttribute("title", "Login");
-        model.addAttribute("previoususername", "");
-        return "user/userlogin";
+        model.addAttribute("previousUsername", "");
+        return "user/login";
     }
 
     @RequestMapping(value="login", method = RequestMethod.POST)
@@ -27,18 +30,18 @@ public class LoginController {
                                        String userName,
                                        String password){
         if(userDao.existsByName(userName)){
-            User theUserLoggingIn = userDao.findByName(userName);
-            if(password.equals(theUserLoggingIn.getPassword())){
-                return "redirect:/availability/list";
+            User logIn = userDao.findByName(userName);
+            if(password.equals(logIn.getPassword())){
+                return "redirect:/availability/add";
             } else {
                 model.addAttribute("title", "Login");
-                model.addAttribute("previoususername", userName);
-                model.addAttribute("passworderror", "Incorrect password");
+                model.addAttribute("previousUsername", userName);
+                model.addAttribute("passwordError", "Incorrect password");
                 return "user/login";
             }
         } else {
             model.addAttribute("title", "Login");
-            model.addAttribute("usernameerror", "That user does not exist.");
+            model.addAttribute("usernameError", "That user does not exist.");
             return "user/login";
         }
     }
